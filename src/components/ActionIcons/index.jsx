@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { Eye, Pencil, PencilOff, Trash, TrashOff } from "tabler-icons-react";
-import { routeNames } from "../../Routes/routeNames";
+import { routeNames } from "../../routes/routeNames";
 import { backendUrl } from "../../constants/constants";
 import { UserContext } from "../../contexts/UserContext";
 import DeleteModal from "../DeleteModal";
