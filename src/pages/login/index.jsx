@@ -10,7 +10,7 @@ import { useContext, useEffect } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { useMutation } from "react-query";
 import { showNotification } from "@mantine/notifications";
-import { routeNames } from "../../Routes/routeNames";
+import { routeNames } from "../../routes/routeNames";
 import { useNavigate } from "react-router";
 import { useStyles } from "./styles";
 
