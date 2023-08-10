@@ -8,7 +8,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { SideBar } from "../components/Sidebar";
 import { routeNames } from "../routes/routeNames";
 import { Header as MyHeader } from "../components/Header";
@@ -18,16 +18,18 @@ import { useCallback } from "react";
 // const now = Date.now();
 const GeneralLayout = () => {
   const theme = useMantineTheme();
+  const location = useLocation();
   const { user, status } = useContext(UserContext);
   const [opened, setOpened] = useState(false);
 
   const [allowed, setAllowed] = useState(true);
-
   const checkedAllowed = useCallback(() => {
-    return user.token;
-  }, [JSON.stringify(user)]);
+    console.log(location.state);
+    return user?.token?.length > 0 || location?.state?.token?.length > 0;
+  }, [user, location?.state?.token]);
 
   useEffect(() => {
+    console.log(checkedAllowed());
     setAllowed(checkedAllowed());
   }, [checkedAllowed]);
 

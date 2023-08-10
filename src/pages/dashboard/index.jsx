@@ -33,22 +33,22 @@ export const Dashboard = () => {
     },
   ]);
 
-  const { status } = useQuery(
-    "fetchDashboard",
-    () => {
-      return axios.get(backendUrl + "/api/v1/dashboard", {
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-      });
-    },
-    {
-      onSuccess: (res) => {
-        const data = res.data.data;
-        setData(data);
-      },
-    }
-  );
+  // const { status } = useQuery(
+  //   "fetchDashboard",
+  //   () => {
+  //     return axios.get(backendUrl + "/api/v1/dashboard", {
+  //       headers: {
+  //         authorization: `Bearer ${user.token}`,
+  //       },
+  //     });
+  //   },
+  //   {
+  //     onSuccess: (res) => {
+  //       const data = res.data.data;
+  //       setData(data);
+  //     },
+  //   }
+  // );
   return (
     <>
       <Title align="center" mb="lg" color="gray">

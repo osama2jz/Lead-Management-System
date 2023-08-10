@@ -38,6 +38,7 @@ export const UserProvider = ({ children }) => {
         localStorage.clear();
         navigate(routeNames.general.login);
       },
+      enabled: !!token,
     }
   );
 

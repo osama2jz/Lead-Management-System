@@ -60,7 +60,11 @@ export const Login = () => {
         );
         setUser({ token: response?.data?.data?.token });
         form.reset();
-        navigate(routeNames.general.dashboard);
+        navigate(routeNames.general.dashboard, {
+          state: {
+            token: response?.data?.token,
+          },
+        });
       },
       onError: (err) => {
         showNotification({
