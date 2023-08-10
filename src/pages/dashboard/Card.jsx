@@ -1,7 +1,7 @@
 import { Container, Text } from "@mantine/core";
 import { useStyles } from "./styles";
 import { useNavigate } from "react-router-dom";
-import { routeNames } from "../../Routes/routeNames";
+import { routeNames } from "../../routes/routeNames";
 
 const Card = ({ data }) => {
   const { classes } = useStyles();
