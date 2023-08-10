@@ -8,32 +8,31 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { SideBar } from "../components/Sidebar";
 import { routeNames } from "../routes/routeNames";
 import { Header as MyHeader } from "../components/Header";
 import { UserContext } from "../contexts/UserContext";
-import { useCallback } from "react";
 
 // const now = Date.now();
 const GeneralLayout = () => {
   const theme = useMantineTheme();
-  const location = useLocation();
-  const { user, status } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [opened, setOpened] = useState(false);
 
-  const [allowed, setAllowed] = useState(true);
-  const checkedAllowed = useCallback(() => {
-    console.log(location.state);
-    return user?.token?.length > 0 || location?.state?.token?.length > 0;
-  }, [user, location?.state?.token]);
-
   useEffect(() => {
-    console.log(checkedAllowed());
-    setAllowed(checkedAllowed());
-  }, [checkedAllowed]);
+    if (!user?.token || user.ttl < Date.now()) {
+      localStorage.clear();
+      setUser(null);
+    }
+  }, [user?.token, user?.ttl, setUser]);
 
-  return allowed ? (
+  if (user.email === "someRandomValue") {
+    console.log(user);
+    return <p>loading...</p>;
+  }
+
+  return user?.token ? (
     <AppShell
       styles={{
         main: {
@@ -78,7 +77,7 @@ const GeneralLayout = () => {
         mih={"77vh"}
         style={{ borderRadius: "10px" }}
       >
-        {status === "loading" ? <div>Loading...</div> : allowed && <Outlet />}
+        <Outlet />
       </Container>
     </AppShell>
   ) : (

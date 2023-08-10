@@ -19,6 +19,7 @@ export const Login = () => {
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
+    console.log(user);
     if (user?.token) {
       navigate(routeNames.general.dashboard);
     }
@@ -58,7 +59,10 @@ export const Login = () => {
           "ttl",
           new Date().getTime() + 1000 * 60 * 60 * 24 * 30
         );
-        setUser({ token: response?.data?.data?.token });
+        setUser({
+          token: response?.data?.token,
+          ttl: new Date().getTime() + 1000 * 60 * 60 * 24 * 30,
+        });
         form.reset();
         navigate(routeNames.general.dashboard, {
           state: {

@@ -11,8 +11,10 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const ttl = localStorage.getItem("ttl");
   const [user, setUser] = useState({
     token,
+    ttl,
   });
 
   const { status } = useQuery(
@@ -26,7 +28,7 @@ export const UserProvider = ({ children }) => {
     },
     {
       onSuccess: (res) => {
-        setUser((u) => ({ ...u, ...res.data }));
+        setUser((u) => ({ ...u, ...res.data.user }));
       },
       onError: () => {
         showNotification({
