@@ -13,6 +13,7 @@ import { SideBar } from "../components/Sidebar";
 import { routeNames } from "../routes/routeNames";
 import { Header as MyHeader } from "../components/Header";
 import { UserContext } from "../contexts/UserContext";
+import { useCallback } from "react";
 
 // const now = Date.now();
 const GeneralLayout = () => {
@@ -22,13 +23,13 @@ const GeneralLayout = () => {
 
   const [allowed, setAllowed] = useState(true);
 
+  const checkedAllowed = useCallback(() => {
+    return user.token;
+  }, [JSON.stringify(user)]);
+
   useEffect(() => {
     setAllowed(checkedAllowed());
-  }, [user?.toString()]);
-
-  const checkedAllowed = () => {
-    return user.token;
-  };
+  }, [checkedAllowed]);
 
   return allowed ? (
     <AppShell

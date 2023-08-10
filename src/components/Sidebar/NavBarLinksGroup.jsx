@@ -80,25 +80,20 @@ export function LinksGroup({
       onClick={() => setSideOpen(false)}
       key={link.label}
       color={
-        location?.pathname === link.link && label === globalOpen
+        location?.pathname === link.link
           ? theme.colors.primary[9]
           : "rgb(0,0,0,0.9)"
       }
       sx={{
         borderRight:
           location?.pathname === link.link &&
-          label === globalOpen &&
           `10px solid ${theme.colors.primary[9]}`,
       }}
-      bg={
-        location?.pathname === link.link && label === globalOpen
-          ? theme.colors.primary[0]
-          : ""
-      }
+      bg={location?.pathname === link.link ? theme.colors.primary[0] : ""}
     >
       <Text
         color={
-          location?.pathname === link.link && label === globalOpen
+          location?.pathname === link.link
             ? theme.colors.primary[9]
             : "rgb(0,0,0,0.9)"
         }
@@ -107,7 +102,7 @@ export function LinksGroup({
       </Text>{" "}
       <Text
         color={
-          location?.pathname === link.link && label === globalOpen
+          location?.pathname === link.link
             ? theme.colors.primary[9]
             : "rgb(0,0,0,0.9)"
         }
@@ -136,14 +131,9 @@ export function LinksGroup({
         sx={{
           borderRight:
             location?.pathname === link &&
-            label === globalOpen &&
             `10px solid ${theme.colors.primary[9]}`,
         }}
-        bg={
-          location?.pathname === link && label === globalOpen
-            ? theme.colors.primary[0]
-            : ""
-        }
+        bg={location?.pathname === link ? theme.colors.primary[0] : ""}
       >
         <Group
           position="apart"
@@ -153,7 +143,7 @@ export function LinksGroup({
         >
           <Text
             color={
-              location?.pathname === link && label === globalOpen
+              location?.pathname === link
                 ? theme.colors.primary[9]
                 : "rgb(0,0,0,0.9)"
             }
@@ -163,7 +153,7 @@ export function LinksGroup({
             <Icon
               size={18}
               color={
-                location?.pathname === link && label === globalOpen
+                location?.pathname === link
                   ? theme.colors.primary[9]
                   : "rgb(0,0,0,0.9)"
               }

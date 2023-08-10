@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@amcharts/amcharts5": "^5.4.2",
     "@emotion/react": "^11.11.1",
     "@mantine/core": "^6.0.18",
     "@mantine/form": "^6.0.18",

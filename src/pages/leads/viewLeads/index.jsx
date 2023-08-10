@@ -15,7 +15,8 @@ const ViewLeads = () => {
   const { user } = useContext(UserContext);
   const [tableData, setTableData] = useState([]);
   const [search, setSearch] = useState("");
-  const [blockedFilter, setBlockedFilter] = useState(null);
+  const [blockedFilter, setBlockedFilter] = useState("");
+  const [websites, setWebsites] = useState([]);
 
   const { status, isFetching } = useQuery(
     "fetchLeads",
@@ -35,18 +36,42 @@ const ViewLeads = () => {
       },
     }
   );
-  const filteredItems = tableData.filter((item) => {
-    if (blockedFilter === null)
-      return item?.firstName?.toLowerCase().includes(search.toLowerCase());
-    else
-      return (
-        item?.title?.toLowerCase().includes(search.toLowerCase()) &&
-        item?.blocked === blockedFilter
+
+  const fetchWebsites = useQuery(
+    "fetchWebsites",
+    () => {
+      return axios.get(
+        import.meta.env.VITE_BACKEND_URL + "/leads/get-distinct-websites",
+        {
+          headers: {
+            authorization: user.token,
+          },
+        }
       );
+    },
+    {
+      onSuccess: (res) => {
+        setWebsites(res.data.websites);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
+  const filteredItems = tableData.filter((item) => {
+    return (item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+      item?.lastName?.toLowerCase().includes(search.toLowerCase()) ||
+      item?.email?.toLowerCase().includes(search.toLowerCase()) ||
+      item?.phone?.toLowerCase().includes(search.toLowerCase())) &&
+      blockedFilter.length
+      ? item?.contactStatus === blockedFilter
+      : true;
   });
+
   const handleClearFilters = () => {
     setSearch("");
-    setBlockedFilter(null);
+    setBlockedFilter("");
   };
   return (
     <Container size="xl" p="sm">
@@ -66,8 +91,11 @@ const ViewLeads = () => {
           <Grid.Col sm="6" md={"6"} lg="4" style={{ textAlign: "end" }}>
             <SelectMenu
               placeholder={"Search By website"}
-              data={[]}
+              data={websites.map((item) => {
+                return { label: item, value: item };
+              })}
               searchable
+              clearable
             />
           </Grid.Col>
           <Grid.Col sm="6" md="6" lg="3">

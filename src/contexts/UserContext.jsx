@@ -2,11 +2,14 @@ import { showNotification } from "@mantine/notifications";
 import axios from "axios";
 import { createContext, useState } from "react";
 import { useQuery } from "react-query";
+import { routeNames } from "../routes/routeNames";
+import { useNavigate } from "react-router-dom";
 
 export const UserContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const UserProvider = ({ children }) => {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [user, setUser] = useState({
     token,
@@ -17,7 +20,7 @@ export const UserProvider = ({ children }) => {
     () => {
       return axios.get(import.meta.env.VITE_BACKEND_URL + "/auth/my-profile", {
         headers: {
-          authorization: user.token,
+          authorization: token,
         },
       });
     },
@@ -31,6 +34,9 @@ export const UserProvider = ({ children }) => {
           message: "There was an error fetching your profile",
           color: "red",
         });
+        setUser(null);
+        localStorage.clear();
+        navigate(routeNames.general.login);
       },
     }
   );

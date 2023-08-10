@@ -39,16 +39,16 @@ export const Columns = [
   },
   {
     name: "Status",
-    selector: (row) => row.blocked,
+    selector: (row) => row.contactStatus,
     width: "200px",
     sortable: true,
     center: true,
     cell: (row) => (
       <StatusToggle
-        status={row.blocked}
+        status={row.contactStatus}
         id={row._id}
-        type={"product"}
-        queryName="fetchProducts"
+        type={"leads"}
+        queryName="fetchLeads"
       />
     ),
   },
@@ -69,8 +69,8 @@ export const Columns = [
 ];
 
 export const filterbyStatus = [
-  { label: "All", value: null },
-  { label: "Contacted", value: true },
-  { label: "Not Contacted", value: false },
-  { label: "No Response", value: false },
+  { label: "All", value: "" },
+  { label: "Contacted", value: "Contacted" },
+  { label: "Not Contacted", value: "Not Contacted" },
+  { label: "No Response", value: "Mo Response" },
 ];

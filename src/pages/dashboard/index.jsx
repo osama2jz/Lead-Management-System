@@ -1,14 +1,37 @@
-import { Loader, SimpleGrid, Title } from "@mantine/core";
+import { Loader, SimpleGrid, Title, useMantineTheme } from "@mantine/core";
 import axios from "axios";
 import { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { backendUrl } from "../../constants/constants";
 import { UserContext } from "../../contexts/UserContext";
 import Card from "./Card";
+import { Car, Flag } from "tabler-icons-react";
 
 export const Dashboard = () => {
   const { user } = useContext(UserContext);
-  const [data, setData] = useState([{}, {}, {}, {}]);
+  const theme = useMantineTheme();
+  const [data, setData] = useState([
+    {
+      label: "Total Leads",
+      value: 0,
+      icon: <Flag size={40} strokeWidth={1} />,
+    },
+    {
+      label: "Total Leads",
+      value: 0,
+      icon: <Flag size={40} strokeWidth={1} />,
+    },
+    {
+      label: "Total Leads",
+      value: 0,
+      icon: <Flag size={40} strokeWidth={1} />,
+    },
+    {
+      label: "Total Leads",
+      value: 0,
+      icon: <Flag size={40} strokeWidth={1} />,
+    },
+  ]);
 
   const { status } = useQuery(
     "fetchDashboard",
@@ -36,8 +59,10 @@ export const Dashboard = () => {
         <Loader style={{ width: "100%", margin: "auto" }} />
       ) : (
         <SimpleGrid
+          spacing={"xl"}
           verticalSpacing={"xl"}
-          breakpoints={[{ minWidth: "sm", cols: 2 }]}
+          cols={4}
+          breakpoints={[{ maxWidth: "md", cols: 2, spacing: "md" }]}
         >
           {data.map((obj, ind) => (
             <Card key={ind} data={obj} />

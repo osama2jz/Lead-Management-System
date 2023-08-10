@@ -1,44 +1,83 @@
 import { Badge, Loader, Menu } from "@mantine/core";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { backendUrl } from "../../constants/constants";
 import { UserContext } from "../../contexts/UserContext";
 import { showNotification } from "@mantine/notifications";
 
+const getMenuItems = (status, handleStatusChange) => {
+  const menuItems = [];
+
+  if (status !== "Not Contacted") {
+    menuItems.push(
+      <Menu.Item
+        color={"red"}
+        onClick={() => handleStatusChange.mutate("Not Contacted")}
+        key={"Not Contacted"}
+      >
+        Not Contacted
+      </Menu.Item>
+    );
+  }
+
+  if (status !== "Contacted") {
+    menuItems.push(
+      <Menu.Item
+        color={"green"}
+        onClick={() => handleStatusChange.mutate("Contacted")}
+        key={"Contacted"}
+      >
+        Contacted
+      </Menu.Item>
+    );
+  }
+
+  if (status !== "No Response") {
+    menuItems.push(
+      <Menu.Item
+        color={"yellow"}
+        onClick={() => handleStatusChange.mutate("No Response")}
+        key={"No Response"}
+      >
+        No Response
+      </Menu.Item>
+    );
+  }
+
+  return menuItems;
+};
+
+// eslint-disable-next-line react/prop-types
 const StatusToggle = ({ status, id, type, queryName }) => {
   const { user } = useContext(UserContext);
-  const [blocked, setBlocked] = useState(status ? true : false);
+  // const [blocked, setBlocked] = useState(status ? true : false);
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    setBlocked(status);
-  }, [status]);
   //to change status
   const handleStatusChange = useMutation(
-    async () => {
-      const link = backendUrl + `/api/v1/${type}/${id}`;
+    async (value) => {
+      const link = import.meta.env.VITE_BACKEND_URL + `/${type}/${id}`;
       return axios.patch(
         link,
-        { blocked: !blocked },
+        { contactStatus: value },
         {
           headers: {
-            authorization: `Bearer ${user.token}`,
+            authorization: user.token,
           },
         }
       );
     },
     {
       onSuccess: (res) => {
+        console.log("success", res.data);
         queryName && queryClient.invalidateQueries(queryName);
-        setBlocked(blocked ? "unBlocked" : "Block");
         showNotification({
           title: "Success",
           message: `${type} status changed successfully`,
           color: "green",
         });
       },
-      onError: (res) => {
+      onError: () => {
         showNotification({
           title: "Error",
           message: `Something went wrong`,
@@ -48,9 +87,23 @@ const StatusToggle = ({ status, id, type, queryName }) => {
     }
   );
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Contacted":
+        return "green";
+      case "No Response":
+        return "yellow";
+      case "Not Contacted":
+        return "red";
+      default:
+        return "gray";
+    }
+  };
+
   if (handleStatusChange.isLoading) {
     return <Loader style={{ margin: "auto" }} size="sm" />;
   }
+
   return (
     <Menu
       trigger="hover"
@@ -60,22 +113,12 @@ const StatusToggle = ({ status, id, type, queryName }) => {
       style={{
         cursor: "pointer",
       }}
-      styles={{ dropdown: { zIndex: 999 } }}
+      withinPortal
     >
       <Menu.Target>
-        <Badge color={blocked ? "red" : "green"}>Not Contacted</Badge>
+        <Badge color={getStatusColor(status)}>{status}</Badge>
       </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item color="green" onClick={() => handleStatusChange.mutate()}>
-          Contacted
-        </Menu.Item>
-        <Menu.Item color="green" onClick={() => handleStatusChange.mutate()}>
-          Not Contacted
-        </Menu.Item>
-        <Menu.Item color="green" onClick={() => handleStatusChange.mutate()}>
-          No Response
-        </Menu.Item>
-      </Menu.Dropdown>
+      <Menu.Dropdown>{getMenuItems(status, handleStatusChange)}</Menu.Dropdown>
     </Menu>
   );
 };

@@ -2,15 +2,14 @@ import { createStyles } from "@mantine/core";
 
 export const useStyles = createStyles((theme) => ({
   card: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "white",
     borderRadius: "10px",
-    width: "250px",
-    height: "200px",
+    padding: "1rem",
     cursor: "pointer",
     backgroundColor: theme.colors.primary,
+  },
+  iconContainer: {
+    backgroundColor: "black",
+    borderRadius: "50%",
+    padding: "1rem",
   },
 }));

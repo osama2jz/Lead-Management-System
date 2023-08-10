@@ -1,6 +1,5 @@
 import { createStyles, Navbar, ScrollArea } from "@mantine/core";
-import { useContext, useState } from "react";
-import { UserContext } from "../../contexts/UserContext";
+import { useState } from "react";
 import { LinksGroup } from "./NavBarLinksGroup";
 import { sidebarData } from "./sidebarData";
 
@@ -34,8 +33,8 @@ const useStyles = createStyles((theme) => ({
   linksInner: {},
 }));
 
+// eslint-disable-next-line react/prop-types
 export function SideBar({ setOpened, opened }) {
-  const { user } = useContext(UserContext);
   const { classes } = useStyles();
   const [globalOpen, setGlobalOpen] = useState("");
   const links = sidebarData?.map((item, ind) => (
