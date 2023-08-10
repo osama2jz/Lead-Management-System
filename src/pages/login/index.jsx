@@ -5,7 +5,6 @@ import PassInput from "../../components/PassInput";
 import { useForm } from "@mantine/form";
 import Button from "../../components/Button";
 import axios from "axios";
-import { backendUrl } from "../../constants/constants";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { useMutation } from "react-query";
@@ -21,9 +20,10 @@ export const Login = () => {
 
   useEffect(() => {
     if (user?.token) {
-      navigate(routeNames.general.landing);
+      navigate(routeNames.general.dashboard);
     }
   }, [navigate, user]);
+
   const form = useForm({
     validateInputOnChange: true,
     initialValues: {
@@ -39,47 +39,45 @@ export const Login = () => {
     },
   });
 
-  // const handleLogin = useMutation(
-  //   (values) => {
-  //     return axios.post(`${backendUrl + "/api/v1/auth/login"}`, values);
-  //   },
-  //   {
-  //     onSuccess: (response) => {
-  //       if (response.data?.success) {
-  //         showNotification({
-  //           title: "Success",
-  //           message: response?.data?.message,
-  //           color: "green",
-  //         });
-  //         localStorage.setItem(
-  //           "userData",
-  //           JSON.stringify(response?.data?.data)
-  //         );
-  //         setUser({ token: response?.data?.data?.token });
-  //         form.reset();
-  //       } else {
-  //         showNotification({
-  //           title: "Error",
-  //           message: response?.data?.message,
-  //           color: "red",
-  //         });
-  //       }
-  //     },
-  //     onError: (response) => {
-  //       showNotification({
-  //         title: "Error",
-  //         message: response?.response?.data?.message,
-  //         color: "red",
-  //       });
-  //     },
-  //   }
-  // );
+  const handleLogin = useMutation(
+    (values) => {
+      return axios.post(
+        `${import.meta.env.VITE_BACKEND_URL + "/auth/login"}`,
+        values
+      );
+    },
+    {
+      onSuccess: (response) => {
+        showNotification({
+          title: "Success",
+          message: response?.data?.message || "Login Successful",
+          color: "green",
+        });
+        localStorage.setItem("token", response?.data?.token);
+        localStorage.setItem(
+          "ttl",
+          new Date().getTime() + 1000 * 60 * 60 * 24 * 30
+        );
+        setUser({ token: response?.data?.data?.token });
+        form.reset();
+        navigate(routeNames.general.dashboard);
+      },
+      onError: (err) => {
+        showNotification({
+          title: "Error",
+          message: err?.response?.data?.message || "Login Failed",
+          color: "red",
+        });
+      },
+    }
+  );
   return (
     <Container mih="100vh" className={classes.con}>
       <form
         className={classes.form}
-        onSubmit={form.onSubmit((values) =>
-          navigate(routeNames.general.viewLoads)
+        onSubmit={form.onSubmit(
+          (values) => handleLogin.mutate(values)
+          // navigate(routeNames.general.viewLoads)
         )}
       >
         <Image
@@ -104,7 +102,7 @@ export const Login = () => {
           label={"Login"}
           type={"submit"}
           mt="md"
-          // loading={handleLogin.isLoading}
+          loading={handleLogin.isLoading}
         />
       </form>
     </Container>

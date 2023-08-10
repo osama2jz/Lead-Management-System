@@ -17,7 +17,7 @@ import { UserContext } from "../contexts/UserContext";
 // const now = Date.now();
 const GeneralLayout = () => {
   const theme = useMantineTheme();
-  const { user, setUser } = useContext(UserContext);
+  const { user, status } = useContext(UserContext);
   const [opened, setOpened] = useState(false);
 
   const [allowed, setAllowed] = useState(true);
@@ -27,7 +27,7 @@ const GeneralLayout = () => {
   }, [user?.toString()]);
 
   const checkedAllowed = () => {
-    return true;
+    return user.token;
   };
 
   return allowed ? (
@@ -75,7 +75,7 @@ const GeneralLayout = () => {
         mih={"77vh"}
         style={{ borderRadius: "10px" }}
       >
-        {allowed && <Outlet />}
+        {status === "loading" ? <div>Loading...</div> : allowed && <Outlet />}
       </Container>
     </AppShell>
   ) : (

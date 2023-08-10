@@ -1,6 +1,6 @@
 import { createStyles } from "@mantine/core";
 
-export const useStyles = createStyles((theme) => ({
+export const useStyles = createStyles(() => ({
   con: {
     display: "flex",
   },
@@ -9,7 +9,7 @@ export const useStyles = createStyles((theme) => ({
     flexDirection: "column",
     borderRadius: "20px",
     // alignItems: "center",
-    gap:'10px',
+    gap: "10px",
     width: "500px",
     padding: "50px",
     margin: "auto",

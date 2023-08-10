@@ -4,17 +4,15 @@ import { showNotification } from "@mantine/notifications";
 import axios from "axios";
 import { useContext } from "react";
 import { useMutation } from "react-query";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import Button from "../../components/Button";
 import PassInput from "../../components/PassInput";
-import { backendUrl } from "../../constants/constants";
 import { UserContext } from "../../contexts/UserContext";
 import { routeNames } from "../../routes/routeNames";
 
 export const Settings = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  let { state } = useLocation();
 
   const form = useForm({
     validateInputOnChange: true,
@@ -25,38 +23,49 @@ export const Settings = () => {
     },
 
     validate: {
-      oldPassword: (value) => (value?.length > 0 ? null : "Please enter old password"),
+      oldPassword: (value) =>
+        value?.length > 0 ? null : "Please enter old password",
       newPassword: (value) =>
         value?.length > 0 ? null : "Please enter new password",
-      confirmPass: (value) =>
-        value?.length > 0 ? null : "Please enter confirm password",
+      confirmPass: (value, values) =>
+        value?.length > 0
+          ? value === values.newPassword
+            ? null
+            : "Passwords do not match"
+          : "Please enter confirm password",
     },
   });
 
   const handleChangePassword = useMutation(
     (values) => {
-      return axios.patch(`${backendUrl + "/api/v1/auth/updateProfile"}`, values, {
-        headers: {
-          authorization: `Bearer ${user.token}`,
+      return axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/auth/change-password",
+        {
+          oldPassword: values.oldPassword,
+          newPassword: values.newPassword,
         },
-      });
+        {
+          headers: {
+            authorization: user.token,
+          },
+        }
+      );
     },
     {
       onSuccess: (response) => {
-        if (response.data?.success) {
-          showNotification({
-            title: "Success",
-            message: response?.data?.message,
-            color: "green",
-          });
-          form.reset();
-        } else {
-          showNotification({
-            title: "Error",
-            message: response?.data?.message,
-            color: "red",
-          });
-        }
+        showNotification({
+          title: "Success",
+          message: response?.data?.message || "Password Changed Successfully",
+          color: "green",
+        });
+        form.reset();
+      },
+      onError: (error) => {
+        showNotification({
+          title: "Error",
+          message: error?.response?.data?.message || "Something went wrong",
+          color: "red",
+        });
       },
     }
   );

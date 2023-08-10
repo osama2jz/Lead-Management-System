@@ -6,6 +6,7 @@ import { MantineProvider } from "@mantine/core";
 import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext.jsx";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Notifications } from "@mantine/notifications";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,7 +36,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             ],
           },
           primaryColor: "primary",
-          globalStyles: (theme) => ({
+          globalStyles: () => ({
             ".mantine-Modal-title": {
               margin: "auto",
               fontWeight: "bold",
@@ -46,6 +47,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       >
         <QueryClientProvider client={queryClient}>
           <UserProvider>
+            <Notifications position="top-center" />
             <App />
           </UserProvider>
         </QueryClientProvider>

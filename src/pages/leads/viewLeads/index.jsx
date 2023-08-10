@@ -1,6 +1,6 @@
 import { Container, Grid, Title } from "@mantine/core";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import SelectMenu from "../../../components/SelectMenu";
 import { useStyles } from "../styles";
@@ -9,56 +9,32 @@ import DataGrid from "../../../components/Table";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 import { UserContext } from "../../../contexts/UserContext";
-import { backendUrl } from "../../../constants/constants";
-import { routeNames } from "../../../routes/routeNames";
-import { useNavigate } from "react-router";
 
 const ViewLeads = () => {
   const { classes } = useStyles();
-  const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const [tableData, setTableData] = useState([
-    {
-      firstName: "abc",
-      lastName: "abc",
-      email: "email@email.com",
-      phone: "032424324",
-    },
-    {
-      firstName: "abc",
-      lastName: "abc",
-      email: "email@email.com",
-      phone: "032424324",
-    },
-    {
-      firstName: "abc",
-      lastName: "abc",
-      email: "email@email.com",
-      phone: "032424324",
-    },
-  ]);
+  const [tableData, setTableData] = useState([]);
   const [search, setSearch] = useState("");
   const [blockedFilter, setBlockedFilter] = useState(null);
 
-  // const { status } = useQuery(
-  //   "fetchProducts",
-  //   () => {
-  //     return axios.get(backendUrl + "/api/v1/product", {
-  //       headers: {
-  //         authorization: `Bearer ${user.token}`,
-  //       },
-  //     });
-  //   },
-  //   {
-  //     onSuccess: (res) => {
-  //       const data = res.data.data;
-  //       data.map((item) => {
-  //         item.serialNo = data.indexOf(item) + 1;
-  //       });
-  //       setTableData(data);
-  //     },
-  //   }
-  // );
+  const { status, isFetching } = useQuery(
+    "fetchLeads",
+    () => {
+      return axios.get(import.meta.env.VITE_BACKEND_URL + "/leads", {
+        headers: {
+          authorization: user.token,
+        },
+      });
+    },
+    {
+      onSuccess: (res) => {
+        const data = res.data.leads.map((item, index) => {
+          return { ...item, serialNo: index + 1 };
+        });
+        setTableData(data);
+      },
+    }
+  );
   const filteredItems = tableData.filter((item) => {
     if (blockedFilter === null)
       return item?.firstName?.toLowerCase().includes(search.toLowerCase());
@@ -114,7 +90,7 @@ const ViewLeads = () => {
         <DataGrid
           columns={Columns}
           data={filteredItems}
-          progressPending={status === "loading"}
+          progressPending={status === "loading" || isFetching}
           type="product"
         />
       </Container>
