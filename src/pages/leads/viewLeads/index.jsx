@@ -24,6 +24,18 @@ const ViewLeads = () => {
       email: "email@email.com",
       phone: "032424324",
     },
+    {
+      firstName: "abc",
+      lastName: "abc",
+      email: "email@email.com",
+      phone: "032424324",
+    },
+    {
+      firstName: "abc",
+      lastName: "abc",
+      email: "email@email.com",
+      phone: "032424324",
+    },
   ]);
   const [search, setSearch] = useState("");
   const [blockedFilter, setBlockedFilter] = useState(null);
@@ -69,10 +81,17 @@ const ViewLeads = () => {
         <Grid p="xs">
           <Grid.Col md="6" lg="3">
             <InputField
-              placeholder={"Search Title"}
+              placeholder={"Search Record"}
               leftIcon="search"
               value={search}
               onChange={(v) => setSearch(v.target.value)}
+            />
+          </Grid.Col>
+          <Grid.Col sm="6" md={"6"} lg="4" style={{ textAlign: "end" }}>
+            <SelectMenu
+              placeholder={"Search By website"}
+              data={[]}
+              searchable
             />
           </Grid.Col>
           <Grid.Col sm="6" md="6" lg="3">
@@ -83,6 +102,7 @@ const ViewLeads = () => {
               onChange={setBlockedFilter}
             />
           </Grid.Col>
+
           <Grid.Col sm="6" md="3" lg={"2"} style={{ textAlign: "end" }}>
             <Button
               label={"Clear Filters"}
@@ -90,13 +110,6 @@ const ViewLeads = () => {
               onClick={handleClearFilters}
             />
           </Grid.Col>
-          {/* <Grid.Col sm="6" md={"6"} lg="4" style={{ textAlign: "end" }}>
-            <Button
-              label={"Add Product"}
-              leftIcon="plus"
-              onClick={() => navigate(routeNames.general.addProduct)}
-            />
-          </Grid.Col> */}
         </Grid>
         <DataGrid
           columns={Columns}

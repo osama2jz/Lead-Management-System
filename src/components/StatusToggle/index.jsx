@@ -18,11 +18,15 @@ const StatusToggle = ({ status, id, type, queryName }) => {
   const handleStatusChange = useMutation(
     async () => {
       const link = backendUrl + `/api/v1/${type}/${id}`;
-      return axios.patch(link, { blocked: !blocked },{
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-      });
+      return axios.patch(
+        link,
+        { blocked: !blocked },
+        {
+          headers: {
+            authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
     },
     {
       onSuccess: (res) => {
@@ -47,7 +51,6 @@ const StatusToggle = ({ status, id, type, queryName }) => {
   if (handleStatusChange.isLoading) {
     return <Loader style={{ margin: "auto" }} size="sm" />;
   }
-  console.log(status);
   return (
     <Menu
       trigger="hover"
@@ -57,22 +60,21 @@ const StatusToggle = ({ status, id, type, queryName }) => {
       style={{
         cursor: "pointer",
       }}
+      styles={{ dropdown: { zIndex: 999 } }}
     >
       <Menu.Target>
-        <Badge color={blocked ? "red" : "green"} w="100px">
-          {blocked ? "Blocked" : "Unblocked"}
-        </Badge>
+        <Badge color={blocked ? "red" : "green"}>Not Contacted</Badge>
       </Menu.Target>
       <Menu.Dropdown>
-        {!blocked ? (
-          <Menu.Item color="red" onClick={() => handleStatusChange.mutate()}>
-            Block
-          </Menu.Item>
-        ) : (
-          <Menu.Item color="green" onClick={() => handleStatusChange.mutate()}>
-            Unblock
-          </Menu.Item>
-        )}
+        <Menu.Item color="green" onClick={() => handleStatusChange.mutate()}>
+          Contacted
+        </Menu.Item>
+        <Menu.Item color="green" onClick={() => handleStatusChange.mutate()}>
+          Not Contacted
+        </Menu.Item>
+        <Menu.Item color="green" onClick={() => handleStatusChange.mutate()}>
+          No Response
+        </Menu.Item>
       </Menu.Dropdown>
     </Menu>
   );

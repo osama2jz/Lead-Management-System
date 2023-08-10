@@ -40,7 +40,7 @@ export const Columns = [
   {
     name: "Status",
     selector: (row) => row.blocked,
-    width: "150px",
+    width: "200px",
     sortable: true,
     center: true,
     cell: (row) => (
@@ -70,6 +70,7 @@ export const Columns = [
 
 export const filterbyStatus = [
   { label: "All", value: null },
-  { label: "Blocked", value: true },
-  { label: "Unblocked", value: false },
+  { label: "Contacted", value: true },
+  { label: "Not Contacted", value: false },
+  { label: "No Response", value: false },
 ];
